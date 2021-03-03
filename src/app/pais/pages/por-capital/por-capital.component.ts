@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Country } from '../../interfaces/pais.interface';
+import { PaisService } from '../../services/pais.service';
 
 @Component({
   selector: 'app-por-capital',
@@ -6,11 +8,28 @@ import { Component, OnInit } from '@angular/core';
   styles: [
   ]
 })
-export class PorCapitalComponent implements OnInit {
+export class PorCapitalComponent{
 
-  constructor() { }
+  
+  termino: string   = '';
+  hayError: boolean = false;
+  paices: Country[] = [];
+/* Aqui lo que estamos haciendo es inyectar un servicio, mas especifico (servicio: PaisService) */
+  constructor( private paisService: PaisService ) { }
 
-  ngOnInit(): void {
+  bucar( termino: string ){
+
+    this.hayError = false;
+    this.termino  = termino;
+
+    this.paisService.buscarCapital( this.termino )
+    .subscribe( (paices) => {
+      this.paices = paices;
+      
+    }, (err) => {
+      this.hayError = true;
+      this.paices   = [];
+    });
   }
 
 }
